@@ -34,6 +34,7 @@ export const extractAssignments = async (file: File): Promise<{
   success: boolean;
   data?: AssignmentData[];
   error?: string;
+  statusCode?: number;
 }> => {
   try {
     const formData = new FormData();
@@ -45,9 +46,65 @@ export const extractAssignments = async (file: File): Promise<{
       },
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Assignment extraction error:', error);
-    throw error;
+    
+    let errorMessage = 'Failed to process the PDF file. Please try again.';
+    let statusCode = 500;
+    
+    if (error.response) {
+      // Server responded with error status
+      statusCode = error.response.status;
+      errorMessage = error.response.data?.error || error.response.data?.message || error.message;
+      
+      if (statusCode >= 400 && statusCode < 500) {
+        // 4xx client errors
+        switch (statusCode) {
+          case 400:
+            errorMessage = error.response.data?.error || 'Invalid file or request format';
+            break;
+          case 401:
+            errorMessage = 'Authentication failed. Please check API credentials.';
+            break;
+          case 403:
+            errorMessage = 'Access forbidden. Please check permissions.';
+            break;
+          case 404:
+            errorMessage = 'Service not found. Please contact support.';
+            break;
+          case 429:
+            errorMessage = 'Rate limit exceeded. Please wait a moment and try again.';
+            break;
+          default:
+            errorMessage = error.response.data?.error || `Client error (${statusCode})`;
+        }
+      } else if (statusCode >= 500) {
+        // 5xx server errors
+        switch (statusCode) {
+          case 500:
+            errorMessage = 'Internal server error. Please try again later.';
+            break;
+          case 502:
+            errorMessage = 'Service temporarily unavailable. Please try again.';
+            break;
+          case 503:
+            errorMessage = 'Service unavailable. Please try again later.';
+            break;
+          default:
+            errorMessage = error.response.data?.error || `Server error (${statusCode})`;
+        }
+      }
+    } else if (error.request) {
+      // Network error
+      errorMessage = 'Network error. Please check your connection and try again.';
+      statusCode = 0;
+    }
+    
+    return {
+      success: false,
+      error: errorMessage,
+      statusCode
+    };
   }
 };
 
