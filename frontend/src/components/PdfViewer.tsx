@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import ReactMarkdown from 'react-markdown';
+
+// Configure PDF.js worker using CDN
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,11 +64,8 @@ import GlobalTagsDialog, { type Tag } from './GlobalTagsDialog';
 import HighlightTagsDialog from './HighlightTagsDialog';
 import { HIGHLIGHT_COLORS } from '@/lib/colors';
 
-// Configure PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
-).toString();
+// Configure PDF.js worker using public worker file
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 // Types
 interface Highlight {
@@ -224,20 +223,13 @@ const PdfViewer: React.FC = () => {
 
   // Text selection highlighting
   const handleTextSelection = useCallback(() => {
-    console.log('handleTextSelection called, isSelecting:', state.isSelecting);
-    
     if (!state.isSelecting) {
-      console.log('Not in selecting mode, returning');
       return;
     }
 
     const selection = window.getSelection();
-    console.log('Selection object:', selection);
-    console.log('Selection is collapsed:', selection?.isCollapsed);
-    console.log('Selection range count:', selection?.rangeCount);
 
     if (!selection || selection.isCollapsed) {
-      console.log('No selection or selection is collapsed, returning');
       return;
     }
 
@@ -246,15 +238,12 @@ const PdfViewer: React.FC = () => {
     const pdfContainer = pdfCanvasRef.current;
     
     if (!pdfContainer || !pdfContainer.contains(range.commonAncestorContainer)) {
-      console.log('Selection is not within PDF container, ignoring');
       return;
     }
 
     const selectedText = selection.toString().trim();
-    console.log('Selected text:', `"${selectedText}"`);
     
     if (!selectedText) {
-      console.log('No selected text, returning');
       return;
     }
 
@@ -270,7 +259,6 @@ const PdfViewer: React.FC = () => {
       const textContentLayer = pdfCanvasRef.current?.querySelector('.react-pdf__Page__textContent');
       
       if (!pdfPageElement) {
-        console.log('Could not find PDF page element');
         return;
       }
 
@@ -278,25 +266,13 @@ const PdfViewer: React.FC = () => {
       const containerRect = pdfCanvasRef.current?.getBoundingClientRect();
       const textLayerRect = textContentLayer?.getBoundingClientRect();
       
-      console.log('=== DEBUG INFO ===');
-      console.log('Range rects count:', rects.length);
-      console.log('PDF page element rect:', pdfPageRect);
-      console.log('Container rect:', containerRect);
-      console.log('Text layer rect:', textLayerRect);
-      console.log('First selection rect:', rects[0]);
-      console.log('PDF page element type:', pdfPageElement.tagName);
-      console.log('PDF page element classes:', pdfPageElement.className);
-      
       // Use text layer rect if it exists and is different from page rect
       const referenceRect = (textLayerRect && 
                            (Math.abs(textLayerRect.left - pdfPageRect.left) > 1 || 
                             Math.abs(textLayerRect.top - pdfPageRect.top) > 1)) 
                            ? textLayerRect : pdfPageRect;
-                           
-      console.log('Using reference rect:', referenceRect === textLayerRect ? 'TEXT_LAYER' : 'PDF_PAGE');
-      
+                                 
       if (rects.length === 0) {
-        console.log('No selection rects, returning');
         return;
       }
 
@@ -308,11 +284,8 @@ const PdfViewer: React.FC = () => {
           right: rect.right - referenceRect.left,
           bottom: rect.bottom - referenceRect.top
         };
-        console.log('Original rect:', rect, 'Reference rect offset:', {x: referenceRect.left, y: referenceRect.top}, 'Final relative rect:', relativeRect);
         return relativeRect;
       });
-
-      console.log('Creating highlight with rects:', highlightRects);
 
       const highlight: Highlight = {
         id: `highlight-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -349,7 +322,6 @@ const PdfViewer: React.FC = () => {
     const pdfContainer = pdfCanvasRef.current;
     
     if (!pdfContainer || !pdfContainer.contains(target)) {
-      console.log('Mouse up outside PDF container, ignoring');
       return;
     }
     
@@ -360,7 +332,6 @@ const PdfViewer: React.FC = () => {
     setTimeout(() => {
       const selection = window.getSelection();
       const selectedText = selection?.toString().trim();
-      console.log('Text selection attempt 1:', selectedText ? `"${selectedText}"` : 'none');
       
       if (selectedText) {
         handleTextSelection();
@@ -369,7 +340,6 @@ const PdfViewer: React.FC = () => {
         setTimeout(() => {
           const selection2 = window.getSelection();
           const selectedText2 = selection2?.toString().trim();
-          console.log('Text selection attempt 2:', selectedText2 ? `"${selectedText2}"` : 'none');
           if (selectedText2) {
             handleTextSelection();
           }
@@ -381,10 +351,7 @@ const PdfViewer: React.FC = () => {
 
   // Debug effect for highlighting mode changes
   useEffect(() => {
-    console.log('Highlighting mode changed to:', state.isSelecting);
     if (state.isSelecting) {
-      console.log('Text selection enabled - look for yellow background on PDF text layer');
-      console.log('PDF page ref:', pdfCanvasRef.current);
     }
   }, [state.isSelecting]);
 
@@ -392,10 +359,7 @@ const PdfViewer: React.FC = () => {
   useEffect(() => {
     if (!state.isSelecting) return;
 
-    console.log('Setting up global event listeners for text selection');
-
     const handleGlobalMouseUp = (e: MouseEvent) => {
-      console.log('Global mouseup event triggered');
       handleMouseUp(e);
     };
 
@@ -405,7 +369,6 @@ const PdfViewer: React.FC = () => {
       setTimeout(() => {
         const selection = window.getSelection();
         const selectedText = selection?.toString().trim();
-        console.log('Selection change detected:', selectedText ? `"${selectedText}"` : 'none');
         
         // Don't auto-highlight on selection change, only on mouseup
         // This is just for debugging
@@ -417,7 +380,6 @@ const PdfViewer: React.FC = () => {
     document.addEventListener('selectionchange', handleSelectionChange);
 
     return () => {
-      console.log('Cleaning up global event listeners');
       document.removeEventListener('mouseup', handleGlobalMouseUp);
       document.removeEventListener('selectionchange', handleSelectionChange);
     };
