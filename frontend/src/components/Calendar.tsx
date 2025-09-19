@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import { type AssignmentData } from '@/lib/api';
 
@@ -14,7 +14,6 @@ type ViewMode = 'month' | 'week' | 'day';
 export const Calendar: React.FC<CalendarProps> = ({ assignments, onDateSelect }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<ViewMode>('month');
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   // Group assignments by date for quick lookup, handling date ranges
   const assignmentsByDate = useMemo(() => {
@@ -55,7 +54,6 @@ export const Calendar: React.FC<CalendarProps> = ({ assignments, onDateSelect })
 
   // Handle date selection - switch to day view
   const handleDateSelect = (date: Date) => {
-    setSelectedDate(date);
     setCurrentDate(date);
     setViewMode('day');
     onDateSelect?.(date);

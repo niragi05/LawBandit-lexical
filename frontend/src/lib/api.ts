@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api', // This will be proxied to http://localhost:5000/api
+  baseURL: import.meta.env.VITE_API_URL || '/api', // Use env var in production, fallback to relative path for dev proxy
 });
 
 export const testConnection = async () => {
