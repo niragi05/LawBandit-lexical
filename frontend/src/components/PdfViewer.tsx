@@ -263,7 +263,7 @@ const PdfViewer: React.FC = () => {
       }
 
       const pdfPageRect = pdfPageElement.getBoundingClientRect();
-      const containerRect = pdfCanvasRef.current?.getBoundingClientRect();
+      // const containerRect = pdfCanvasRef.current?.getBoundingClientRect();
       const textLayerRect = textContentLayer?.getBoundingClientRect();
       
       // Use text layer rect if it exists and is different from page rect
@@ -367,8 +367,8 @@ const PdfViewer: React.FC = () => {
       if (!state.isSelecting) return;
       
       setTimeout(() => {
-        const selection = window.getSelection();
-        const selectedText = selection?.toString().trim();
+        // const selection = window.getSelection();
+        // const selectedText = selection?.toString().trim();
         
         // Don't auto-highlight on selection change, only on mouseup
         // This is just for debugging
