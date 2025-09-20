@@ -4,7 +4,9 @@
 
 LexiCal is a comprehensive web application designed specifically for law students to streamline their academic planning. Upload your course syllabi and automatically extract assignments, readings, and deadlines into an organized calendar format. Plus, get AI-powered text analysis, PDF annotation, and flowchart generation tools.
 
-![LexiCal Demo](https://asu.zoom.us/rec/share/oXs_BINU_TwhmgUkwY3DRGk58OT0NWI68u5_WSd351nMw3sunBSxVTTCMJa5QY5Q.ABmj2zqiPDee9dmj)
+## 🎥 Demo
+
+[**Watch LexiCal Demo**](https://asu.zoom.us/rec/share/oXs_BINU_TwhmgUkwY3DRGk58OT0NWI68u5_WSd351nMw3sunBSxVTTCMJa5QY5Q.ABmj2zqiPDee9dmj)
 
 **Passcode**: `Attached in the mail`
 
