@@ -306,7 +306,7 @@ const PdfViewer: React.FC = () => {
 
       // Clear selection after creating highlight
       selection.removeAllRanges();
-      toast.success(`Text highlighted: "${selectedText.substring(0, 30)}..."`);
+      toast.success('Text highlighted');
     } catch (error) {
       console.error('Error creating highlight:', error);
       toast.error('Failed to create highlight');
