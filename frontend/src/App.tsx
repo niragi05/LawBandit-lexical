@@ -2,7 +2,6 @@ import { useState } from "react";
 import { SyllabusUpload } from "@/components/SyllabusUpload";
 import { Calendar } from "@/components/Calendar";
 import { type AssignmentData } from "@/lib/api";
-import { Toaster } from "sonner";
 
 function App() {
   const [assignments, setAssignments] = useState<AssignmentData[]>([]);
@@ -42,9 +41,6 @@ function App() {
           </div>
         </div>
       </div>
-
-      {/* Toast Notifications */}
-      <Toaster position="bottom-right" richColors />
     </>
   );
 }

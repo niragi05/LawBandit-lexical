@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateAIResponse } from "@/lib/api";
 import { Paperclip, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Message {
   id: string;
@@ -219,10 +220,18 @@ Please provide a helpful response based on the provided context.`;
 
   const attachAsNote = (message: Message) => {
     if (selectedText) {
-      setAttachedNotes(prev => ({
-        ...prev,
-        [selectedText]: [...(prev[selectedText] || []), message]
-      }));
+      try {
+        setAttachedNotes(prev => ({
+          ...prev,
+          [selectedText]: [...(prev[selectedText] || []), message]
+        }));
+        toast.success('Note attached successfully');
+      } catch (error) {
+        console.error('Error attaching note:', error);
+        toast.error('Failed to attach note');
+      }
+    } else {
+      toast.error('Failed to attach note');
     }
   };
 

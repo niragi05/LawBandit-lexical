@@ -8,6 +8,7 @@ import {
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -110,6 +111,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {/* Main Content */}
       {children}
+      
+      {/* Toast Notifications - Available on all routes */}
+      <Toaster position="bottom-right" richColors />
     </div>
   );
 };

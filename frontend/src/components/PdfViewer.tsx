@@ -611,17 +611,24 @@ Please provide a helpful response based on the provided context.`;
   // Notes functionality
   const attachAsNote = useCallback((message: Message) => {
     if (state.currentHighlight) {
-      setState(prev => ({
-        ...prev,
-        attachedNotes: {
-          ...prev.attachedNotes,
-          [state.currentHighlight!.id]: [
-            ...(prev.attachedNotes[state.currentHighlight!.id] || []),
-            message
-          ]
-        }
-      }));
-      toast.success('Response attached as note to highlight');
+      try {
+        setState(prev => ({
+          ...prev,
+          attachedNotes: {
+            ...prev.attachedNotes,
+            [state.currentHighlight!.id]: [
+              ...(prev.attachedNotes[state.currentHighlight!.id] || []),
+              message
+            ]
+          }
+        }));
+        toast.success('Note attached successfully');
+      } catch (error) {
+        console.error('Error attaching note:', error);
+        toast.error('Failed to attach note');
+      }
+    } else {
+      toast.error('Failed to attach note');
     }
   }, [state.currentHighlight]);
 
