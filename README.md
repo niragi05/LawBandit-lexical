@@ -250,6 +250,14 @@ Having issues? Check out our troubleshooting guide:
 - Verify backend is running on port 3001
 - Check CORS configuration
 
+### Contact & Support
+
+Need help or have questions? Reach out to us:
+
+- **📧 Email**: [niragimasalia@gmail.com](mailto:niragimasalia@gmail.com)
+- **💼 LinkedIn**: [https://www.linkedin.com/in/niragi-masalia/](https://www.linkedin.com/in/niragi-masalia/)
+
+We're here to help you make the most of LexiCal for your law school journey!
 
 ## 🎉 Acknowledgments
 
